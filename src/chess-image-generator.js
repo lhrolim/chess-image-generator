@@ -22,7 +22,6 @@ const {
  * @property {number} [size] Pixel length of desired image
  * @property {string} [light] Color of light squares
  * @property {string} [dark] Color of dark squares
- * @property {string} [highlight] Color of highlight overlay
  * @property {"merida"|"alpha"|"cheq"} [style] Desired style of pieces
  * @property {boolean} [flipped] Whether the board is to be flipped or not
  */
@@ -32,13 +31,13 @@ const {
  */
 function ChessImageGenerator(options = {}) {
   this.chess = new Chess();
-  this.highlightedSquares = [];
+  this.highlightedSquares = []; //array of objects with {squares:[],color:string}
+  this.highLightedSquaresMap = {};
 
   this.size = options.size || defaultSize;
   this.padding = options.padding || defaultPadding;
   this.light = options.light || defaultLight;
   this.dark = options.dark || defaultDark;
-  this.highlight = options.highlight || defaultHighlight;
   this.style = options.style || defaultStyle;
   this.flipped = options.flipped || false;
 
@@ -99,6 +98,12 @@ ChessImageGenerator.prototype = {
    */
   highlightSquares(array) {
     this.highlightedSquares = array;
+    //[] of objects with {squares:[],color:string}
+    this.highLightedSquaresMap = array.map((item) => {
+      item.squares.forEach((square) => {
+        this.highLightedSquaresMap[square] = item.color;
+      });
+    });
   },
 
   /**
@@ -110,16 +115,24 @@ ChessImageGenerator.prototype = {
       throw new Error("Load a position first");
     }
 
-    const canvas = createCanvas(this.size + this.padding[1] + this.padding[3], this.size + this.padding[0] + this.padding[2]);
+    const canvas = createCanvas(
+      this.size + this.padding[1] + this.padding[3],
+      this.size + this.padding[0] + this.padding[2]
+    );
     const ctx = canvas.getContext("2d");
 
     ctx.beginPath();
-    ctx.rect(0, 0, this.size + this.padding[1] + this.padding[3], this.size + this.padding[0] + this.padding[2]);
+    ctx.rect(
+      0,
+      0,
+      this.size + this.padding[1] + this.padding[3],
+      this.size + this.padding[0] + this.padding[2]
+    );
     ctx.fillStyle = this.light;
     ctx.fill();
 
-    const row = this.flipped ? r => r + 1 : r => 7 - r + 1;
-    const col = this.flipped ? c => c : c => 7 - c;
+    const row = this.flipped ? (r) => r + 1 : (r) => 7 - r + 1;
+    const col = this.flipped ? (c) => c : (c) => 7 - c;
 
     for (let i = 0; i < 8; i += 1) {
       for (let j = 0; j < 8; j += 1) {
@@ -128,8 +141,8 @@ ChessImageGenerator.prototype = {
         if ((i + j) % 2 === 0) {
           ctx.beginPath();
           ctx.rect(
-            ((this.size / 8) * (7 - j + 1) - this.size / 8) + this.padding[3],
-            ((this.size / 8) * i) + this.padding[0],
+            (this.size / 8) * (7 - j + 1) - this.size / 8 + this.padding[3],
+            (this.size / 8) * i + this.padding[0],
             this.size / 8,
             this.size / 8
           );
@@ -137,11 +150,11 @@ ChessImageGenerator.prototype = {
           ctx.fill();
         }
 
-        if (this.highlightedSquares.includes(coords)) {
+        if (this.highlightedSquares) {
           ctx.beginPath();
           ctx.rect(
-            ((this.size / 8) * (7 - j + 1) - this.size / 8) + this.padding[3],
-            ((this.size / 8) * i) + this.padding[0],
+            (this.size / 8) * (7 - j + 1) - this.size / 8 + this.padding[3],
+            (this.size / 8) * i + this.padding[0],
             this.size / 8,
             this.size / 8
           );
@@ -162,8 +175,8 @@ ChessImageGenerator.prototype = {
           const imageFile = await loadImage(path.join(__dirname, image));
           await ctx.drawImage(
             imageFile,
-            ((this.size / 8) * (7 - j + 1) - this.size / 8) + this.padding[3],
-            ((this.size / 8) * i) + this.padding[0],
+            (this.size / 8) * (7 - j + 1) - this.size / 8 + this.padding[3],
+            (this.size / 8) * i + this.padding[0],
             this.size / 8,
             this.size / 8
           );
