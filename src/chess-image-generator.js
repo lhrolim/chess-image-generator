@@ -99,9 +99,9 @@ ChessImageGenerator.prototype = {
   highlightSquares(array) {
     this.highlightedSquares = array;
     //[] of objects with {squares:[],color:string}
-    this.highLightedSquaresMap = array.map((item) => {
+    array.forEach((item) => {
       item.squares.forEach((square) => {
-        this.highLightedSquaresMap[square] = item.color;
+        this.highLightedSquaresMap[square] = item.color; // Assign color to each square
       });
     });
   },
