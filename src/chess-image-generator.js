@@ -150,7 +150,7 @@ ChessImageGenerator.prototype = {
           ctx.fill();
         }
 
-        if (this.highlightedSquares) {
+        if (this.highLightedSquaresMap && this.highLightedSquaresMap[coords]) {
           ctx.beginPath();
           ctx.rect(
             (this.size / 8) * (7 - j + 1) - this.size / 8 + this.padding[3],
@@ -158,7 +158,7 @@ ChessImageGenerator.prototype = {
             this.size / 8,
             this.size / 8
           );
-          ctx.fillStyle = this.highlight;
+          ctx.fillStyle = this.highLightedSquaresMap[coords];
           ctx.fill();
         }
 
