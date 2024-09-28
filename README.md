@@ -176,11 +176,11 @@ Piece notation follows the same rules as [FEN](#loading-by-fen).
 ```
 | Parameter    | Type     | Description          |
 |---------|----------|----------------------|
-| array | `array of strings` | Array of coordinates to highlight. |
+| array | `array of {squares:[],color:string}` | Array of coordinates to highlight. |
 
 ### Example:
 ```
-imageGenerator.highlightSquares(["e4", "e5"])
+imageGenerator.highlightSquares([{squares:["e4", "e5"],color:"rgba(235, 97, 80, 0.8)"},{squares:["d4","d5],color:"green"}])
 ```
 
 # Generate an Image
