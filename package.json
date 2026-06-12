@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/andyruwruw/chessimage#readme",
   "dependencies": {
-    "canvas": "^2.6.1",
+    "canvas": "^3.2.1",
     "canvas-to-buffer": "^1.1.0",
     "chess.js": "^0.10.2",
     "fs": "0.0.1-security",
